@@ -37,3 +37,13 @@ func RequestGetWithQuery(uriAddress string) {
 	}
 	log.Println(string(body))
 }
+
+// RequestHead requests with the HEAD method.
+func RequestHead(uriAddress string) {
+	resp, err := http.Head(uriAddress)
+	if err != nil {
+		panic(err)
+	}
+	log.Println("Status:", resp.Status)
+	log.Println("Headers:", resp.Header)
+}
