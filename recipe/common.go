@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"os"
 )
 
 func RequestGet(uriAddress string) {
@@ -53,6 +54,18 @@ func RequestPostWithUrlEncoded(uriAddress string) {
 		"test": {"value"},
 	}
 	resp, err := http.PostForm(uriAddress, values)
+	if err != nil {
+		panic(err)
+	}
+	log.Println("Status:", resp.Status)
+}
+
+func RequestPostWithFileBody(uriAddress, fileName string) {
+	file, err := os.Open(fileName)
+	if err != nil {
+		panic(err)
+	}
+	resp, err := http.Post(uriAddress, "text/plain", file)
 	if err != nil {
 		panic(err)
 	}
