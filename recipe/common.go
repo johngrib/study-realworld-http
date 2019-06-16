@@ -1,8 +1,11 @@
 package recipe
 
 import (
+	"bytes"
+	"io"
 	"io/ioutil"
 	"log"
+	"mime/multipart"
 	"net/http"
 	"net/url"
 	"os"
@@ -76,6 +79,32 @@ func RequestPostWithFileBody(uriAddress, fileName string) {
 func RequestPostWithTextString(uriAddress, text string) {
 	reader := strings.NewReader(text)
 	resp, err := http.Post(uriAddress, "text/plain", reader)
+	if err != nil {
+		panic(err)
+	}
+	log.Println("Status:", resp.Status)
+}
+
+// RequestPostWithMultipart requests with multipart/form-data
+func RequestPostWithMultipart(uriAddress string) {
+	var buffer bytes.Buffer
+	writer := multipart.NewWriter(&buffer)
+
+	// 파일 이외의 필드는 WriteField 메소드로 등록
+	writer.WriteField("name", "Michael Jackson")
+
+	fileWriter, err := writer.CreateFormFile("thumbnail", "photo.jpg")
+	if err != nil {
+		panic(err)
+	}
+	readFile, err := os.Open("photo.jpg")
+	if err != nil {
+		panic(err)
+	}
+	defer readFile.Close()
+	io.Copy(fileWriter, readFile)
+	writer.Close()
+	resp, err := http.Post(uriAddress, writer.FormDataContentType(), &buffer)
 	if err != nil {
 		panic(err)
 	}
