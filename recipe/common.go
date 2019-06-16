@@ -7,6 +7,7 @@ import (
 	"log"
 	"mime/multipart"
 	"net/http"
+	"net/http/httputil"
 	"net/url"
 	"os"
 	"strings"
@@ -109,4 +110,25 @@ func RequestPostWithMultipart(uriAddress string) {
 		panic(err)
 	}
 	log.Println("Status:", resp.Status)
+}
+
+func Proxy(proxyAddress string) {
+	proxyUrl, err := url.Parse(proxyAddress)
+	if err != nil {
+		panic(err)
+	}
+	client := http.Client{
+		Transport: &http.Transport{
+			Proxy: http.ProxyURL(proxyUrl),
+		},
+	}
+	resp, err := client.Get("http://github.com")
+	if err != nil {
+		panic(err)
+	}
+	dump, err := httputil.DumpResponse(resp, true)
+	if err != nil {
+		panic(err)
+	}
+	log.Println(string(dump))
 }
