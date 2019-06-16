@@ -47,3 +47,14 @@ func RequestHead(uriAddress string) {
 	log.Println("Status:", resp.Status)
 	log.Println("Headers:", resp.Header)
 }
+
+func RequestPostWithUrlEncoded(uriAddress string) {
+	values := url.Values{
+		"test": {"value"},
+	}
+	resp, err := http.PostForm(uriAddress, values)
+	if err != nil {
+		panic(err)
+	}
+	log.Println("Status:", resp.Status)
+}
