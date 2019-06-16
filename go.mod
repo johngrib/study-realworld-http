@@ -1,4 +1,4 @@
-module realworldhttp
+module github.com/johngrib/study-realworld-http
 
 go 1.12
 
