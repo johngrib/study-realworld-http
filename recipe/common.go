@@ -132,3 +132,20 @@ func Proxy(proxyAddress string) {
 	}
 	log.Println(string(dump))
 }
+
+func RequestDelete(uriAddress string) {
+	client := &http.Client{}
+	request, err := http.NewRequest("DELETE", uriAddress, nil)
+	if err != nil {
+		panic(err)
+	}
+	resp, err := client.Do(request)
+	if err != nil {
+		panic(err)
+	}
+	dump, err := httputil.DumpResponse(resp, true)
+	if err != nil {
+		panic(err)
+	}
+	log.Println(string(dump))
+}
